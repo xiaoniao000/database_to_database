@@ -61,7 +61,7 @@ def index(request):
             # 连接源数据库postgres
             scon, scur = getpgconn(database=OJdatabaseName, user=OJuser, password=OJpwd, port=int(OJport))
         else:
-            return redirect('../options')
+            return redirect('../xuanze')
 
         # 连接小雅postgres数据库
         xycon, xycur = getpgconn(database=XYdatabaseName, user=XYuser, password=XYpwd, port=int(XYport))
@@ -90,14 +90,14 @@ def options(request):
         return render(request, 'app01/../templates/options.html')
 
 
-def biancheng(request):
+def xuanze(request):
     if request.method == 'GET':
-        names = [{'en': 'id', 'cn': 'id'}, {'en': 'title', 'cn': '题目'}, {'en': 'score', 'cn': '分数'},
-                 {'en': 'input', 'cn': '输入'}, {'en': 'output', 'cn': '输出'},
-                 {'en': 'test', 'cn': '测试用例ID'}]
+        names = [{'en': 'id', 'cn': 'id'}, {'en': 'title', 'cn': '题目'}, {'en': 'score', 'cn': '分值'}
+            , {'en': 'o_id', 'cn': '选项id'}, {'en': 'o_content', 'cn': '选项内容'}, {'en': 'o_number', 'cn': '选项顺序'},
+                 {'en': 'checked', 'cn': '正确选项'}, {'en': 'a_score', 'cn': '每空分值'}, ]
         tables = get_all_tables()  # 这里以后记得改一下 加上scur
         # print(tables)
-        return render(request, 'biancheng.html', {'tables': tables, 'names': names})
+        return render(request, 'xuanze.html', {'tables': tables, 'names': names})
 
     if request.method == 'POST':
         if request.POST.get('table_chose'):
@@ -107,48 +107,11 @@ def biancheng(request):
                 "table_choosed": table1_name,
                 "ziduan_list": ziduan_list
             }))
-        if request.POST.get('data[id][table]'):
+        else:
             # 在这里写代码！！
 
             print(request.POST)
-            return redirect('../show')
-    #
-    # sub1 = request.POST.get('sub1')
-    # sub2 = request.POST.get('sub2')
-    #
-    # if sub1 == '提交1':
-    #     select_sql, count_sql, select_sql2 = selectSql_b1(request)
-    #     print(select_sql)
-    #     print(count_sql)
-    #     print(select_sql2)
-    #     insert_biancheng1(scur, xycur, xycon, select_sql, count_sql, select_sql2)
-    #
-    # elif sub2 == '提交2':
-    #     select_sql1, count_sql, select_sql2 = selectSql_b2(request)
-    #     print(select_sql1)
-    #     print(count_sql)
-    #     print(select_sql2)
-    #     insert_biancheng(scur, xycur, xycon, select_sql1, count_sql, select_sql2)
-
-    # testCon(scur, select_sql)
-    # closeconn(xycon, xycur)
-    # closeconn(scon, scur)
-
-    return redirect('../show')
-
-
-def xuanze(request):
-    if request.method == 'GET':
-        tables = get_all_tables()  # 这里以后记得改一下 加上scur
-        return render(request, 'xuanze.html', {'tables': tables, })
-    elif request.method == 'POST':
-        if request.POST.get('table'):
-            table1_name = request.POST.get('table')
-            ziduan_list = get_all_ziduanming(table1_name)
-            return HttpResponse(json.dumps({
-                "table_choosed": table1_name,
-                "ziduan_list": ziduan_list
-            }))
+            return redirect('../tiankong')
 
     # if request.method == 'POST':
     #     sub1 = request.POST.get('sub1')
@@ -191,11 +154,11 @@ def tiankong(request):
                 "table_choosed": table1_name,
                 "ziduan_list": ziduan_list
             }))
-        if request.POST.get('data[id][table]'):
+        else:
             # 在这里写代码！！
 
             print(request.POST)
-            return redirect('../show')
+            return redirect('../panduan')
 
     #
     # if request.method == 'POST':
@@ -230,7 +193,7 @@ def tiankong(request):
 def panduan(request):
     if request.method == 'GET':
         names = [{'en': 'id', 'cn': 'id'}, {'en': 'title', 'cn': '题目'}, {'en': 'score', 'cn': '分数'},
-                 {'en': 'answer', 'cn': '正确答案'},{'en': 'answer_id', 'cn': '答案id'}]
+                 {'en': 'answer', 'cn': '正确答案'}, {'en': 'answer_id', 'cn': '答案id'}]
         tables = get_all_tables()  # 这里以后记得改一下 加上scur
         # print(tables)
         return render(request, 'panduan.html', {'tables': tables, 'names': names})
@@ -243,11 +206,11 @@ def panduan(request):
                 "table_choosed": table1_name,
                 "ziduan_list": ziduan_list
             }))
-        if request.POST.get('data[id][table]'):
+        else:
             # 在这里写代码！！
 
             print(request.POST)
-            return redirect('../show')
+            return redirect('../biancheng')
     # if request.method == 'POST':
     #     sub1 = request.POST.get('sub1')
     #     sub2 = request.POST.get('sub2')
@@ -269,6 +232,52 @@ def panduan(request):
     #     return redirect('../show')
     # else:
     #     return render(request, 'app01/../templates/panduan.html')
+
+def biancheng(request):
+    if request.method == 'GET':
+        names = [{'en': 'id', 'cn': 'id'}, {'en': 'title', 'cn': '题目'}, {'en': 'score', 'cn': '分数'},
+                 {'en': 'input', 'cn': '输入'}, {'en': 'output', 'cn': '输出'},
+                 {'en': 'test', 'cn': '测试用例ID'}]
+        tables = get_all_tables()  # 这里以后记得改一下 加上scur
+        # print(tables)
+        return render(request, 'biancheng.html', {'tables': tables, 'names': names})
+
+    if request.method == 'POST':
+        if request.POST.get('table_chose'):
+            table1_name = request.POST.get('table_chose')
+            ziduan_list = get_all_ziduanming(table1_name)
+            return HttpResponse(json.dumps({
+                "table_choosed": table1_name,
+                "ziduan_list": ziduan_list
+            }))
+        else:
+            # 在这里写代码！！
+
+            print(request.POST)
+            return redirect('../show')
+    #
+    # sub1 = request.POST.get('sub1')
+    # sub2 = request.POST.get('sub2')
+    #
+    # if sub1 == '提交1':
+    #     select_sql, count_sql, select_sql2 = selectSql_b1(request)
+    #     print(select_sql)
+    #     print(count_sql)
+    #     print(select_sql2)
+    #     insert_biancheng1(scur, xycur, xycon, select_sql, count_sql, select_sql2)
+    #
+    # elif sub2 == '提交2':
+    #     select_sql1, count_sql, select_sql2 = selectSql_b2(request)
+    #     print(select_sql1)
+    #     print(count_sql)
+    #     print(select_sql2)
+    #     insert_biancheng(scur, xycur, xycon, select_sql1, count_sql, select_sql2)
+
+    # testCon(scur, select_sql)
+    # closeconn(xycon, xycur)
+    # closeconn(scon, scur)
+
+    return redirect('../show')
 
 
 def show(request):

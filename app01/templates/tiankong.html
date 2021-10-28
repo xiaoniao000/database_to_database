@@ -19,7 +19,7 @@
             $(_name_details).removeAttr("open")
 
             $.ajax({
-                url: "{% url 'biancheng' %}",
+                url: "{% url 'tiankong' %}",
                 type: "POST",
                 data: {'table_chose': obj.id},
                 success: function (data) {
@@ -285,7 +285,7 @@
                     </details>
                 </div>
 
-                <button class="btn btn-outline" type="button" value="提交1" name="sub1" id="sub1" onclick="submit1()">
+                <button class="btn btn-outline" type="submit" value="提交1" name="sub1" id="sub1" onclick="submit1()">
                     提交
                 </button>
             </form>

@@ -21,9 +21,9 @@ urlpatterns = [
     path('index/', views.index),
     path('options/', views.options),
     path('biancheng/', views.biancheng, name="biancheng"),
-    path('tiankong/', views.tiankong),
+    path('tiankong/', views.tiankong,name="tiankong"),
     path('xuanze/', views.xuanze, name="xuanze"),
-    path('panduan/', views.panduan),
+    path('panduan/', views.panduan,name="panduan"),
     path('show/', views.show),
 
 ]
