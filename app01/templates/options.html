@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>选择功能</title>
+    <link href="http://lyear.itshubao.com/iframe/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://example.itshubao.com/demo/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="http://lyear.itshubao.com/iframe/css/style.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet" />
+</head>
+
+<body>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-12">
+            <form class="card" method="POST">
+                <div class="card-header"><h4>选择导入题型</h4></div>
+                <div class="card-body">
+
+                    <p>选择导入题目类型</p>
+                    <ul class="list-inline recharge-amount">
+                        <li>
+                            <input type="radio" name="amount" value="0"/>
+                            <p>单选题</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="1"/>
+                            <p>多选题</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="2"/>
+                            <p>单填题</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="3"/>
+                            <p>多填题</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="4"/>
+                            <p>判断题</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="5"/>
+                            <p>主观题</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="6"/>
+                            <p>上传</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="7"/>
+                            <p>投票</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="8"/>
+                            <p>题组</p>
+                        </li>
+                        <li>
+                            <input type="radio" name="amount" value="9"/>
+                            <p>编程题</p>
+                        </li>
+                    </ul>
+
+                    <div class="form-group">
+{#                        <button class="btn btn-default" id="getChose">获取选中值</button>#}
+                        <button class="btn btn-outline"  type="submit">提交</button>
+{#                        <pre class="m-t-10" id="console"></pre>#}
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript" src="http://lyear.itshubao.com/iframe/js/jquery.min.js"></script>
+<script type="text/javascript" src="http://lyear.itshubao.com/iframe/js/bootstrap.min.js"></script>
+</body>
+</html>

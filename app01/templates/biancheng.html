@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet"/>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+
+        //
+        function get_ziduan_list(obj, name) {
+            let _name_table = "#" + name + "_table"
+            {#console.log(obj)#}
+            let _name_details = _name_table + "_details"
+            let _name_ziduan_list = "#" + name + "_ziduan_list"
+
+            $(_name_table).empty().append(obj.id)
+            $(_name_details).removeAttr("open")
+
+            $.ajax({
+                url: "{% url 'biancheng' %}",
+                type: "POST",
+                data: {'table_chose': obj.id},
+                success: function (data) {
+                    $(_name_ziduan_list).empty()
+                    data = JSON.parse(data)
+                    let ziduan_list = data.ziduan_list
+
+                    let _name_ziduan = "#" + name + "_ziduan"
+                    let _name_details = _name_ziduan + "_details"
+
+                    {#添加字段#}
+                    for (let i = 0; i < ziduan_list.length; i++) {
+                        let item = '<button class="SelectMenu-item" role="menuitem" type="button" onclick="choose_ziduan(this)" name="'
+                            + name +
+                            '" id="'
+                            + ziduan_list[i] +
+                            '">'
+                            + ziduan_list[i] +
+                            '</button>'
+                        {#console.log(item)#}
+                        $(_name_ziduan_list).append(item)
+                    }
+                }
+            })
+        }
+
+        function choose_ziduan(obj) {
+            let name = obj.name
+            let _name_ziduan = "#" + name + "_ziduan"
+            let _name_details = _name_ziduan + "_details"
+            $(_name_ziduan).empty().append(obj.id)
+            $(_name_details).removeAttr("open")
+        }
+
+
+        function submit1() {
+            let data = {}
+            data.id = {
+                'table': $("#id_table").text(),
+                'ziduan': $("#id_ziduan").text()
+            }
+            data['title'] = {
+                'table': $("#title_table").text(),
+                'ziduan': $("#title_ziduan").text()
+            }
+            data['score'] = {
+                'table': $("#score_table").text(),
+                'ziduan': $("#score_ziduan").text()
+            }
+            data['input'] = {
+                'table': $("#input_table").text(),
+                'ziduan': $("#input_ziduan").text()
+            }
+            data['output'] = {
+                'table': $("#output_table").text(),
+                'ziduan': $("#output_ziduan").text()
+            }
+            data['test'] = {
+                'table': $("#test_table").text(),
+                'ziduan': $("#test_ziduan").text()
+            }
+            data['connect'] = {
+                'left': {
+                    'table': $("#con1_table").text(),
+                    'ziduan': $("#con1_ziduan").text()
+                },
+                'right':{
+                    'table': $("#con2_table").text(),
+                    'ziduan': $("#con2_ziduan").text()
+                }
+            }
+
+            console.log(data)
+            $.ajax({
+                url: "{% url 'biancheng' %}",
+                type: "POST",
+                data: {'data': data},
+            })
+
+        }
+
+
+    </script>
+</head>
+<body>
+<div>
+    <div class=" d-flex flex-justify-around">
+        <div class="p-5 color-bg-subtle flex-1">
+            <form method="POST">
+                {% csrf_token %}
+
+                <h4>请选择 编程题 所需的表和相应字段名</h4>
+                <div style="padding-left: 20px">
+
+                    {% for name in names %}
+                        <div class="form-group">
+                            <label for="name">{{ name.cn }}：</label>
+                            <details id="{{ name.en }}_table_details" class="details-reset details-overlay"
+                                     style="display: inline-block">
+                                <summary class="btn" id="{{ name.en }}_table" aria-haspopup="true">请选择表</summary>
+                                <div class="SelectMenu SelectMenu--hasFilter">
+                                    <div class="SelectMenu-modal">
+                                        <header class="SelectMenu-header">
+                                            <h3 class="SelectMenu-title">表名</h3>
+                                            <button class="SelectMenu-closeButton" type="button"
+                                                    onclick="$('#{{ name.en }}_table_details').removeAttr('open')">
+                                                <svg class="octicon octicon-x" xmlns="http://www.w3.org/2000/svg"
+                                                     viewBox="0 0 16 16" width="16" height="16">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                          d="M3.72 3.72C3.86062 3.57955 4.05125 3.50066 4.25 3.50066C4.44875 3.50066 4.63937 3.57955 4.78 3.72L8 6.94L11.22 3.72C11.2887 3.64631 11.3715 3.58721 11.4635 3.54622C11.5555 3.50523 11.6548 3.48319 11.7555 3.48141C11.8562 3.47963 11.9562 3.49816 12.0496 3.53588C12.143 3.5736 12.2278 3.62974 12.299 3.70096C12.3703 3.77218 12.4264 3.85702 12.4641 3.9504C12.5018 4.04379 12.5204 4.14382 12.5186 4.24452C12.5168 4.34523 12.4948 4.44454 12.4538 4.53654C12.4128 4.62854 12.3537 4.71134 12.28 4.78L9.06 8L12.28 11.22C12.3537 11.2887 12.4128 11.3715 12.4538 11.4635C12.4948 11.5555 12.5168 11.6548 12.5186 11.7555C12.5204 11.8562 12.5018 11.9562 12.4641 12.0496C12.4264 12.143 12.3703 12.2278 12.299 12.299C12.2278 12.3703 12.143 12.4264 12.0496 12.4641C11.9562 12.5018 11.8562 12.5204 11.7555 12.5186C11.6548 12.5168 11.5555 12.4948 11.4635 12.4538C11.3715 12.4128 11.2887 12.3537 11.22 12.28L8 9.06L4.78 12.28C4.63782 12.4125 4.44977 12.4846 4.25547 12.4812C4.06117 12.4777 3.87579 12.399 3.73837 12.2616C3.60096 12.1242 3.52225 11.9388 3.51882 11.7445C3.51539 11.5502 3.58752 11.3622 3.72 11.22L6.94 8L3.72 4.78C3.57955 4.63938 3.50066 4.44875 3.50066 4.25C3.50066 4.05125 3.57955 3.86063 3.72 3.72Z"></path>
+                                                </svg>
+                                            </button>
+                                        </header>
+
+                                        <div class="SelectMenu-list">
+                                            {% for table in tables %}
+                                                <button class="SelectMenu-item" role="menuitem"
+                                                        id="{{ table }}" type="button"
+                                                        onclick="get_ziduan_list(this,'{{ name.en }}') ">{{ table }}</button>
+                                            {% endfor %}
+                                        </div>
+                                        <footer class="SelectMenu-footer">Footer</footer>
+                                    </div>
+                                </div>
+                            </details>
+                            <details id="{{ name.en }}_ziduan_details" class="details-reset details-overlay"
+                                     style="display: inline-block">
+                                <summary class="btn" id="{{ name.en }}_ziduan" aria-haspopup="true">请选择对应字段</summary>
+                                <div class="SelectMenu SelectMenu--hasFilter">
+                                    <div class="SelectMenu-modal">
+                                        <header class="SelectMenu-header">
+                                            <h3 class="SelectMenu-title">字段名</h3>
+                                            <button class="SelectMenu-closeButton" type="button"
+                                                    onclick="$('#{{ name.en }}_ziduan_details').removeAttr('open')">
+                                                <svg class="octicon octicon-x" xmlns="http://www.w3.org/2000/svg"
+                                                     viewBox="0 0 16 16" width="16" height="16">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                          d="M3.72 3.72C3.86062 3.57955 4.05125 3.50066 4.25 3.50066C4.44875 3.50066 4.63937 3.57955 4.78 3.72L8 6.94L11.22 3.72C11.2887 3.64631 11.3715 3.58721 11.4635 3.54622C11.5555 3.50523 11.6548 3.48319 11.7555 3.48141C11.8562 3.47963 11.9562 3.49816 12.0496 3.53588C12.143 3.5736 12.2278 3.62974 12.299 3.70096C12.3703 3.77218 12.4264 3.85702 12.4641 3.9504C12.5018 4.04379 12.5204 4.14382 12.5186 4.24452C12.5168 4.34523 12.4948 4.44454 12.4538 4.53654C12.4128 4.62854 12.3537 4.71134 12.28 4.78L9.06 8L12.28 11.22C12.3537 11.2887 12.4128 11.3715 12.4538 11.4635C12.4948 11.5555 12.5168 11.6548 12.5186 11.7555C12.5204 11.8562 12.5018 11.9562 12.4641 12.0496C12.4264 12.143 12.3703 12.2278 12.299 12.299C12.2278 12.3703 12.143 12.4264 12.0496 12.4641C11.9562 12.5018 11.8562 12.5204 11.7555 12.5186C11.6548 12.5168 11.5555 12.4948 11.4635 12.4538C11.3715 12.4128 11.2887 12.3537 11.22 12.28L8 9.06L4.78 12.28C4.63782 12.4125 4.44977 12.4846 4.25547 12.4812C4.06117 12.4777 3.87579 12.399 3.73837 12.2616C3.60096 12.1242 3.52225 11.9388 3.51882 11.7445C3.51539 11.5502 3.58752 11.3622 3.72 11.22L6.94 8L3.72 4.78C3.57955 4.63938 3.50066 4.44875 3.50066 4.25C3.50066 4.05125 3.57955 3.86063 3.72 3.72Z"></path>
+                                                </svg>
+                                            </button>
+                                        </header>
+
+                                        <div class="SelectMenu-list">
+                                            <div id="{{ name.en }}_ziduan_list">
+
+                                            </div>
+                                        </div>
+                                        <footer class="SelectMenu-footer">Footer</footer>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+                <h4>连接查询</h4>
+                <div style="padding: 20px">
+                    <details id="con1_table_details" class="details-reset details-overlay"
+                             style="display: inline-block">
+                        <summary class="btn" id="con1_table" aria-haspopup="true">请选择表</summary>
+                        <div class="SelectMenu SelectMenu--hasFilter">
+                            <div class="SelectMenu-modal">
+                                <header class="SelectMenu-header">
+                                    <h3 class="SelectMenu-title">表名</h3>
+                                    <button class="SelectMenu-closeButton" type="button"
+                                            onclick="$('#con1_table_details').removeAttr('open')">
+                                        <svg class="octicon octicon-x" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 16 16" width="16" height="16">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M3.72 3.72C3.86062 3.57955 4.05125 3.50066 4.25 3.50066C4.44875 3.50066 4.63937 3.57955 4.78 3.72L8 6.94L11.22 3.72C11.2887 3.64631 11.3715 3.58721 11.4635 3.54622C11.5555 3.50523 11.6548 3.48319 11.7555 3.48141C11.8562 3.47963 11.9562 3.49816 12.0496 3.53588C12.143 3.5736 12.2278 3.62974 12.299 3.70096C12.3703 3.77218 12.4264 3.85702 12.4641 3.9504C12.5018 4.04379 12.5204 4.14382 12.5186 4.24452C12.5168 4.34523 12.4948 4.44454 12.4538 4.53654C12.4128 4.62854 12.3537 4.71134 12.28 4.78L9.06 8L12.28 11.22C12.3537 11.2887 12.4128 11.3715 12.4538 11.4635C12.4948 11.5555 12.5168 11.6548 12.5186 11.7555C12.5204 11.8562 12.5018 11.9562 12.4641 12.0496C12.4264 12.143 12.3703 12.2278 12.299 12.299C12.2278 12.3703 12.143 12.4264 12.0496 12.4641C11.9562 12.5018 11.8562 12.5204 11.7555 12.5186C11.6548 12.5168 11.5555 12.4948 11.4635 12.4538C11.3715 12.4128 11.2887 12.3537 11.22 12.28L8 9.06L4.78 12.28C4.63782 12.4125 4.44977 12.4846 4.25547 12.4812C4.06117 12.4777 3.87579 12.399 3.73837 12.2616C3.60096 12.1242 3.52225 11.9388 3.51882 11.7445C3.51539 11.5502 3.58752 11.3622 3.72 11.22L6.94 8L3.72 4.78C3.57955 4.63938 3.50066 4.44875 3.50066 4.25C3.50066 4.05125 3.57955 3.86063 3.72 3.72Z"></path>
+                                        </svg>
+                                    </button>
+                                </header>
+
+                                <div class="SelectMenu-list">
+                                    {% for table in tables %}
+                                        <button class="SelectMenu-item" role="menuitem"
+                                                id="{{ table }}" type="button"
+                                                onclick="get_ziduan_list(this,'con1') ">{{ table }}</button>
+                                    {% endfor %}
+                                </div>
+                                <footer class="SelectMenu-footer">Footer</footer>
+                            </div>
+                        </div>
+                    </details>
+                    <details id="con1_ziduan_details" class="details-reset details-overlay"
+                             style="display: inline-block">
+                        <summary class="btn" id="con1_ziduan" aria-haspopup="true">请选择对应字段</summary>
+                        <div class="SelectMenu SelectMenu--hasFilter">
+                            <div class="SelectMenu-modal">
+                                <header class="SelectMenu-header">
+                                    <h3 class="SelectMenu-title">字段名</h3>
+                                    <button class="SelectMenu-closeButton" type="button"
+                                            onclick="$('#con1_ziduan_details').removeAttr('open')">
+                                        <svg class="octicon octicon-x" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 16 16" width="16" height="16">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M3.72 3.72C3.86062 3.57955 4.05125 3.50066 4.25 3.50066C4.44875 3.50066 4.63937 3.57955 4.78 3.72L8 6.94L11.22 3.72C11.2887 3.64631 11.3715 3.58721 11.4635 3.54622C11.5555 3.50523 11.6548 3.48319 11.7555 3.48141C11.8562 3.47963 11.9562 3.49816 12.0496 3.53588C12.143 3.5736 12.2278 3.62974 12.299 3.70096C12.3703 3.77218 12.4264 3.85702 12.4641 3.9504C12.5018 4.04379 12.5204 4.14382 12.5186 4.24452C12.5168 4.34523 12.4948 4.44454 12.4538 4.53654C12.4128 4.62854 12.3537 4.71134 12.28 4.78L9.06 8L12.28 11.22C12.3537 11.2887 12.4128 11.3715 12.4538 11.4635C12.4948 11.5555 12.5168 11.6548 12.5186 11.7555C12.5204 11.8562 12.5018 11.9562 12.4641 12.0496C12.4264 12.143 12.3703 12.2278 12.299 12.299C12.2278 12.3703 12.143 12.4264 12.0496 12.4641C11.9562 12.5018 11.8562 12.5204 11.7555 12.5186C11.6548 12.5168 11.5555 12.4948 11.4635 12.4538C11.3715 12.4128 11.2887 12.3537 11.22 12.28L8 9.06L4.78 12.28C4.63782 12.4125 4.44977 12.4846 4.25547 12.4812C4.06117 12.4777 3.87579 12.399 3.73837 12.2616C3.60096 12.1242 3.52225 11.9388 3.51882 11.7445C3.51539 11.5502 3.58752 11.3622 3.72 11.22L6.94 8L3.72 4.78C3.57955 4.63938 3.50066 4.44875 3.50066 4.25C3.50066 4.05125 3.57955 3.86063 3.72 3.72Z"></path>
+                                        </svg>
+                                    </button>
+                                </header>
+
+                                <div class="SelectMenu-list">
+                                    <div id="con1_ziduan_list">
+
+                                    </div>
+                                </div>
+                                <footer class="SelectMenu-footer">Footer</footer>
+                            </div>
+                        </div>
+                    </details>
+
+                    <span>=</span>
+
+                    <details id="con2_table_details" class="details-reset details-overlay"
+                             style="display: inline-block">
+                        <summary class="btn" id="con2_table" aria-haspopup="true">请选择表</summary>
+                        <div class="SelectMenu SelectMenu--hasFilter">
+                            <div class="SelectMenu-modal">
+                                <header class="SelectMenu-header">
+                                    <h3 class="SelectMenu-title">表名</h3>
+                                    <button class="SelectMenu-closeButton" type="button"
+                                            onclick="$('#con2_table_details').removeAttr('open')">
+                                        <svg class="octicon octicon-x" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 16 16" width="16" height="16">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M3.72 3.72C3.86062 3.57955 4.05125 3.50066 4.25 3.50066C4.44875 3.50066 4.63937 3.57955 4.78 3.72L8 6.94L11.22 3.72C11.2887 3.64631 11.3715 3.58721 11.4635 3.54622C11.5555 3.50523 11.6548 3.48319 11.7555 3.48141C11.8562 3.47963 11.9562 3.49816 12.0496 3.53588C12.143 3.5736 12.2278 3.62974 12.299 3.70096C12.3703 3.77218 12.4264 3.85702 12.4641 3.9504C12.5018 4.04379 12.5204 4.14382 12.5186 4.24452C12.5168 4.34523 12.4948 4.44454 12.4538 4.53654C12.4128 4.62854 12.3537 4.71134 12.28 4.78L9.06 8L12.28 11.22C12.3537 11.2887 12.4128 11.3715 12.4538 11.4635C12.4948 11.5555 12.5168 11.6548 12.5186 11.7555C12.5204 11.8562 12.5018 11.9562 12.4641 12.0496C12.4264 12.143 12.3703 12.2278 12.299 12.299C12.2278 12.3703 12.143 12.4264 12.0496 12.4641C11.9562 12.5018 11.8562 12.5204 11.7555 12.5186C11.6548 12.5168 11.5555 12.4948 11.4635 12.4538C11.3715 12.4128 11.2887 12.3537 11.22 12.28L8 9.06L4.78 12.28C4.63782 12.4125 4.44977 12.4846 4.25547 12.4812C4.06117 12.4777 3.87579 12.399 3.73837 12.2616C3.60096 12.1242 3.52225 11.9388 3.51882 11.7445C3.51539 11.5502 3.58752 11.3622 3.72 11.22L6.94 8L3.72 4.78C3.57955 4.63938 3.50066 4.44875 3.50066 4.25C3.50066 4.05125 3.57955 3.86063 3.72 3.72Z"></path>
+                                        </svg>
+                                    </button>
+                                </header>
+
+                                <div class="SelectMenu-list">
+                                    {% for table in tables %}
+                                        <button class="SelectMenu-item" role="menuitem"
+                                                id="{{ table }}" type="button"
+                                                onclick="get_ziduan_list(this,'con2') ">{{ table }}</button>
+                                    {% endfor %}
+                                </div>
+                                <footer class="SelectMenu-footer">Footer</footer>
+                            </div>
+                        </div>
+                    </details>
+                    <details id="con2_ziduan_details" class="details-reset details-overlay"
+                             style="display: inline-block">
+                        <summary class="btn" id="con2_ziduan" aria-haspopup="true">请选择对应字段</summary>
+                        <div class="SelectMenu SelectMenu--hasFilter">
+                            <div class="SelectMenu-modal">
+                                <header class="SelectMenu-header">
+                                    <h3 class="SelectMenu-title">字段名</h3>
+                                    <button class="SelectMenu-closeButton" type="button"
+                                            onclick="$('#con2_ziduan_details').removeAttr('open')">
+                                        <svg class="octicon octicon-x" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 16 16" width="16" height="16">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M3.72 3.72C3.86062 3.57955 4.05125 3.50066 4.25 3.50066C4.44875 3.50066 4.63937 3.57955 4.78 3.72L8 6.94L11.22 3.72C11.2887 3.64631 11.3715 3.58721 11.4635 3.54622C11.5555 3.50523 11.6548 3.48319 11.7555 3.48141C11.8562 3.47963 11.9562 3.49816 12.0496 3.53588C12.143 3.5736 12.2278 3.62974 12.299 3.70096C12.3703 3.77218 12.4264 3.85702 12.4641 3.9504C12.5018 4.04379 12.5204 4.14382 12.5186 4.24452C12.5168 4.34523 12.4948 4.44454 12.4538 4.53654C12.4128 4.62854 12.3537 4.71134 12.28 4.78L9.06 8L12.28 11.22C12.3537 11.2887 12.4128 11.3715 12.4538 11.4635C12.4948 11.5555 12.5168 11.6548 12.5186 11.7555C12.5204 11.8562 12.5018 11.9562 12.4641 12.0496C12.4264 12.143 12.3703 12.2278 12.299 12.299C12.2278 12.3703 12.143 12.4264 12.0496 12.4641C11.9562 12.5018 11.8562 12.5204 11.7555 12.5186C11.6548 12.5168 11.5555 12.4948 11.4635 12.4538C11.3715 12.4128 11.2887 12.3537 11.22 12.28L8 9.06L4.78 12.28C4.63782 12.4125 4.44977 12.4846 4.25547 12.4812C4.06117 12.4777 3.87579 12.399 3.73837 12.2616C3.60096 12.1242 3.52225 11.9388 3.51882 11.7445C3.51539 11.5502 3.58752 11.3622 3.72 11.22L6.94 8L3.72 4.78C3.57955 4.63938 3.50066 4.44875 3.50066 4.25C3.50066 4.05125 3.57955 3.86063 3.72 3.72Z"></path>
+                                        </svg>
+                                    </button>
+                                </header>
+
+                                <div class="SelectMenu-list">
+                                    <div id="con2_ziduan_list">
+
+                                    </div>
+                                </div>
+                                <footer class="SelectMenu-footer">Footer</footer>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+                <button class="btn btn-outline" type="button" value="提交1" name="sub1" id="sub1" onclick="submit1()">
+                    提交
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{##}
+{#    <form method="POST">#}
+{##}
+{#        <div class=" d-flex flex-justify-around">#}
+{#            <div class="p-5 color-bg-subtle flex-1">#}
+{#                <p><b> 当以下字段不在一个表中时，请在这里填写 </b></p>#}
+{#                <div style="padding-left: 20px">#}
+{#                    <span class="Label mr-1 Label--success Label--large">请填写要查询的表1的名字</span>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="name">表1名</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="table1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <p>请填写表1中的相应字段名</p>#}
+{#                    {% csrf_token %}#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="name">id</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="id1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">题目</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="title1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">分数</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="score1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">输入</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="input1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">输出</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="output1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">测试用例ID</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="t_id1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">测试用例分数</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="t_score1"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{##}
+{#            <div class="p-5 color-bg-subtle flex-1">#}
+{#                <p><b> ’ </b></p>#}
+{#                <div style="padding-left: 20px">#}
+{#                    <span class="Label mr-1 Label--success Label--large">请填写要查询的表2的名字</span>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="name">表2名</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="table2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <p>请填写表2中的相应字段名</p>#}
+{#                    {% csrf_token %}#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="name">id</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="id2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">题目</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="title2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">分数</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="score2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">输入</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="input2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">输出</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="output2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">测试用例ID</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="t_id2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <div class="form-group-header">#}
+{#                            <label for="email">测试用例分数</label>#}
+{#                        </div>#}
+{#                        <div class="form-group-body">#}
+{#                            <input class="form-control" type="text" name="t_score2"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div style="margin-left: 50px">#}
+{#            <span class="Label mr-1 Label--info">两表相等字段</span>#}
+{#            <div class="form-group">#}
+{#                <div class="form-group-header">#}
+{#                    <label for="email">表1</label>#}
+{#                </div>#}
+{#                <div class="form-group-body">#}
+{#                    <input class="form-control" type="text" name="equal1"/>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <div class="form-group-header">#}
+{#                    <label for="email">表2</label>#}
+{#                </div>#}
+{#                <div class="form-group-body">#}
+{#                    <input class="form-control" type="text" name="equal2"/>#}
+{#                </div>#}
+{#            </div>#}
+{#            <button class="btn btn-outline" type="submit" value="提交2" name="sub2">提交2</button>#}
+{##}
+{#        </div>#}
+{##}
+{#    </form>#}
+{#<form  method="POST">#}
+{#    {% csrf_token %}#}
+{#    <p><b>当以下字段在一个表中时，请在这里填写</b></p>#}
+{#    <p>请填写要查询的表的名字</p>#}
+{#    表名: <input type="text" name="table">#}
+{#    <p>请填写表的相应字段名</p>#}
+{#    id: <input type="text" name="id">#}
+{#    题目：<input type="text" name="title">#}
+{#    分数: <input type="text" name="score">#}
+{#    输入：<input type="text" name="input" >#}
+{#    输出：<input type="text" name="output">#}
+{#    <br><br>#}
+{#    <input type="submit" value="提交1" name="sub1">#}
+{#</form>#}
+{#<br><br><br>#}
+{#<form  method="POST">#}
+{#    {% csrf_token %}#}
+{#    <p><b>当以下字段不在一个表中时，请在这里填写</b></p>#}
+{#    <p>请填写要查询的表的名字</p>#}
+{#    表名1: <input type="text" name="table1">#}
+{#    <p>请填写表的相应字段名</p>#}
+{#    id: <input type="text" name="id1">#}
+{#    题目：<input type="text" name="title1">#}
+{#    分数: <input type="text" name="score1">#}
+{#    输入：<input type="text" name="input1" >#}
+{#    输出：<input type="text" name="output1">#}
+{#    <p>请填写要查询的表的名字</p>#}
+{#    表名2: <input type="text" name="table2">#}
+{#    <p>请填写表的相应字段名</p>#}
+{#    id: <input type="text" name="id2">#}
+{#    题目：<input type="text" name="title2">#}
+{#    分数: <input type="text" name="score2">#}
+{#    输入：<input type="text" name="input2" >#}
+{#    输出：<input type="text" name="output2">#}
+{#    <br><br>#}
+{#    两表相等字段：#}
+{#    <br><br>#}
+{#    表1：<input type="text" name="equal1">#}
+{#    表2：<input type="text" name="equal2">#}
+{#    <br><br>#}
+{#    <input type="submit" value="提交2" name="sub2">#}
+{#</form>#}
+</body>
+</html>

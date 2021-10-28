@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>xyDB</title>
+{#    <link href="../../css/primer.css" type="text/css" rel="stylesheet" />#}
+    <link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet" />
+
+
+</head>
+<body>
+
+    <form method="POST" >
+        <div class=" d-flex flex-justify-around" >
+            <div class="p-5 border color-bg-subtle flex-1">
+                <div class="State State--open mr-2">
+                    <b> 源数据库 </b>
+                </div>
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="name">数据库类型</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="OJsourceDatabase" value="mysql" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">数据库名</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="OJdatabaseName" value="exam" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">port</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="OJport" value="3306" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">user</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="OJuser" value="root" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">password</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="password" name="OJpwd" value="root" />
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="p-5 border color-bg-subtle flex-1">
+                <div class="State State--merged mr-2">
+                    <b> 小雅数据库 </b>
+                </div>
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="name">数据库类型</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="XYsourceDatabase" value="postgres" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">数据库名</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="XYdatabaseName" value="postgres" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">port</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="XYport" value="5432" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">user</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="text" name="XYuser" value="postgres" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group-header">
+                      <label for="email">password</label>
+                    </div>
+                    <div class="form-group-body">
+                      <input class="form-control" type="password" name="XYpwd" value="root" />
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class=" d-flex flex-justify-center" style="margin-top: 100px">
+            <button class="btn btn-outline"  type="submit">提交</button>
+        </div>
+
+    </form>
+{#    <form class="border d-flex flex-justify-around" method="POST" >#}
+{#      <div class="p-5 border color-bg-subtle flex-1">#}
+{#          <p><b> OJ数据库 </b></p>#}
+{#        {% csrf_token %}#}
+{#        数据库类型：<input type="text" name="OJsourceDatabase" value="mysql" ><br>#}
+{#        数据库名：<input type="text" name="OJdatabaseName" value="exam"><br>#}
+{#        port：<input type="text" name="OJport" value="3306"><br>#}
+{#        user：<input type="text" name="OJuser" value="root"><br>#}
+{#        password：<input type="password" name="OJpwd" value="root"><br>#}
+{#      </div>#}
+{##}
+{#      <div class="p-5 border color-bg-subtle flex-1">#}
+{#        <p><b> 小雅数据库 </b></p>#}
+{#        数据库类型：<input type="text" name="XYsourceDatabase" value="postgres" ><br>#}
+{#        数据库名：<input type="text" name="XYdatabaseName" value="postgres"><br>#}
+{#        port：<input type="text" name="XYport" value="5432"><br>#}
+{#        user：<input type="text" name="XYuser" value="postgres"><br>#}
+{#        password：<input type="password" name="XYpwd" value="root" ><br>#}
+{#      </div>#}
+{##}
+{#        <button type="submit" class="btn btn-outline">提交</button>#}
+{#    </form>#}
+
+</body>
+</html>
